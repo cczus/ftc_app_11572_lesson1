@@ -64,7 +64,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         - HALT                          // Shutdown sequence for autonomous mode
 
  */
-package org.firstinspires.ftc.teamcode.Opmodes11572;
+package org.firstinspires.ftc.teamcode.VelocityVortex;
 
 /**
  * Import the classes we need to have local access to.
@@ -88,9 +88,9 @@ import java.util.List;
 /**
  * Name the opMode and put it in the appropriate group
  */
-@Autonomous(name = "Red Shoot Cap Ball", group = "COMP")
+@Autonomous(name = "Test OpMode", group = "COMP")
 
-public class RedShootCapBall extends LinearOpMode {
+public class TestOpMode extends LinearOpMode {
 
     /**
      * Instantiate all objects needed in this class
@@ -131,7 +131,7 @@ public class RedShootCapBall extends LinearOpMode {
     private double LF, RF, LR, RR;      //Motor power setting
     private double myCurrentMotorPosition;  //Current encoder position
     private double myTargetPosition;        //Target encoder position
-    private boolean colorLedEnable = false; //Enable if in testing mode, disable for beacon
+    private boolean colorLedEnable = true; //Enable if in testing mode, disable for beacon
     private boolean leftAlign = false;      //
     private boolean beaconFlag = false;
     private List<Double> vuforiaTracking;   //List of Vuforia coordinates
@@ -145,7 +145,7 @@ public class RedShootCapBall extends LinearOpMode {
     private String alliance = "red";                //Your current alliance
     private boolean beaconState = false;            //Has the beacon been triggered?
     private String courseCorrect = "";
-    private State state = State.ACQUIRE_RED_BEACON_LEFT;    //Machine State
+    private State state = State.PUSH_RED_BUTTON_LEFT;    //Machine State
     private String nextState = "Beacon2";
     private int target;
 
@@ -211,12 +211,12 @@ public class RedShootCapBall extends LinearOpMode {
                     shooter.cockShooter(target);
                     shooter.feed(250);
                     shooter.feedStop();
-                    sleep(1250);
+                    sleep(750);
                     shooter.shoot();
                     sleep(500);
-                    shooter.feed(750);
+                    shooter.feed(500);
                     shooter.feedStop();
-                    sleep(1250);
+                    sleep(750);
                     shooter.shoot();
                     state = State.ACQUIRE_RED_BEACON_RIGHT;
                     break;
@@ -330,7 +330,7 @@ public class RedShootCapBall extends LinearOpMode {
                     timeOut = 1;
                     drive.translateTime(timeOut, power, heading);
 
-                    heading = 34;
+                    heading = -34;
                     drive.pivotRight(power, heading);
 
                     heading = 180;

@@ -1,12 +1,14 @@
-package org.firstinspires.ftc.teamcode.Opmodes11572;
+package org.firstinspires.ftc.teamcode.VelocityVortex;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.HardwareProfiles.HardwareTestPlatform;
+import org.firstinspires.ftc.teamcode.Libs.Shooter;
 
 /**
  * This OpMode scans a single servo back and forwards until Stop is pressed.
@@ -22,9 +24,9 @@ import org.firstinspires.ftc.teamcode.HardwareProfiles.HardwareTestPlatform;
  * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
-@Autonomous(name = "SETUP - Check Motors Drive", group = "SETUP")
+@Autonomous(name = "Check Shooter", group = "SETUP")
 @Disabled
-public class AutoSetupMotorsDrive extends LinearOpMode {
+public class AutoSetupMotorsLauncher extends LinearOpMode {
     static final double INCREMENT = 0.01;     // amount to slew servo each CYCLE_MS cycle
     private final static HardwareTestPlatform robot = new HardwareTestPlatform();
     private static final int CYCLE_MS = 50;     // period of each cycle
@@ -39,6 +41,8 @@ public class AutoSetupMotorsDrive extends LinearOpMode {
     // Define class members
     private Servo servo;
     private double position = (MAX_POS - MIN_POS) / 2; // Start at halfway position
+    private LinearOpMode opMode = this;
+    private Shooter shooter = new Shooter(robot, opMode);
 
 
     @Override
@@ -50,38 +54,30 @@ public class AutoSetupMotorsDrive extends LinearOpMode {
         telemetry.addData(">", "Press Start to test Motors.");
         telemetry.update();
         waitForStart();
+        robot.motorShooter.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
+        int target;
+        int currentPosition;
         while (opModeIsActive()) {
-            stopTime = (runtime.time() + interval);
-            while (runtime.time() < stopTime) {
-                robot.motorLF.setPower(.5);
-                robot.motorRF.setPower(.5);
-                robot.motorLR.setPower(.5);
-                robot.motorRR.setPower(.5);
 
-                idle();
-            }
-            motorsHalt();
-            sleep(1000);
-
-            while (runtime.time() < stopTime) {
-                robot.motorLF.setPower(1);
-                robot.motorRF.setPower(1);
-                robot.motorLR.setPower(1);
-                robot.motorRR.setPower(1);
-
-                idle();
-            }
-            motorsHalt();
-            sleep(1000);
-
-            idle();
+            target = shooter.initShooter();
+            shooter.cockShooter(target);
+            shooter.feed(250);
+            shooter.feedStop();
+            sleep(1250);
+            shooter.shoot();
+            sleep(500);
+            shooter.feed(750);
+            shooter.feedStop();
+            sleep(1250);
+            shooter.shoot();
+            sleep(20000);
         }
-
+        motorsHalt();
+        requestOpModeStop();
         // Signal done;
         telemetry.addData(">", "Done");
         telemetry.update();
-
     }
 
     public void motorsHalt() {
@@ -90,5 +86,6 @@ public class AutoSetupMotorsDrive extends LinearOpMode {
         robot.motorLR.setPower(0);
         robot.motorRR.setPower(0);
         robot.motorFeeder.setPower(0);
+        robot.motorShooter.setPower(0);
     }
 }

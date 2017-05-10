@@ -64,13 +64,14 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         - HALT                          // Shutdown sequence for autonomous mode
 
  */
-package org.firstinspires.ftc.teamcode.Opmodes11572;
+package org.firstinspires.ftc.teamcode.VelocityVortex;
 
 /**
  * Import the classes we need to have local access to.
  */
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -88,9 +89,9 @@ import java.util.List;
 /**
  * Name the opMode and put it in the appropriate group
  */
-@Autonomous(name = "Blue Shoot Cap Ball", group = "COMP")
-
-public class BlueShootCapBall extends LinearOpMode {
+@Autonomous(name = "Blue Shoot Cap Ball Only", group = "COMP")
+@Disabled
+public class BlueShootCapBallOnly extends LinearOpMode {
 
     /**
      * Instantiate all objects needed in this class
@@ -145,7 +146,7 @@ public class BlueShootCapBall extends LinearOpMode {
     private String alliance = "blue";                //Your current alliance
     private boolean beaconState = false;            //Has the beacon been triggered?
     private String courseCorrect = "";
-    private State state = State.ACQUIRE_BLUE_BEACON_RIGHT;    //Machine State
+    private State state = State.MOVE_TO_SHOOT_POSITION;    //Machine State
     private String nextState = "Beacon2";
     private int target;
 
@@ -218,135 +219,35 @@ public class BlueShootCapBall extends LinearOpMode {
                     shooter.feedStop();
                     sleep(1250);
                     shooter.shoot();
-                    state = State.ACQUIRE_BLUE_BEACON_LEFT;
+                    state = State.MOVE_BALL;
                     break;
-                case ACQUIRE_BLUE_BEACON_RIGHT:
-                    heading = 310;
+                case MOVE_TO_SHOOT_POSITION:
+                    opMode.sleep(10000);
+
+                    heading = 270; // from 90
                     power = 1;
-                    timeOut = 2.6;
+                    timeOut = 1.5;
                     drive.translateTime(timeOut, power, heading);
 
-                    heading = 270;
-                    power = 1;
-                    timeOut = .6;
-
-                    drive.translateTime(timeOut, power, heading);
-
-                    heading = 270;
-                    power = .2;
-                    drive.translateOdsStop(odsThreshold, power, heading);
-
-                    power = .2;
-                    y = 1475;
-                    heading = 0;
-                    drive.acquireBeaconY(y, power, heading);
-
-                    robotX = 0;
-                    sleep(250);
-
-                    //Exit the OpMode
-                    state = State.PUSH_BLUE_BUTTON_RIGHT;
-                    break;
-
-                case PUSH_BLUE_BUTTON_RIGHT:
-                    beaconColorRight = beacon.getRightColor(colorLedEnable);
-
-                    button = beacon.getButtonPush(alliance, beaconColorRight);
-
-                    beacon.pushButton(button);
-
-                    sleep(250);
-
-                    beaconState = beacon.checkBeacon(colorLedEnable, alliance);
-
-                    while (!beaconState) {
-                        mm = 5;
-                        heading = 0;
-                        drive.translateDistance(mm, power, heading);
-                        beaconState = beacon.checkBeacon(colorLedEnable, alliance);
-                    }
-
-                    beacon.resetButton();
-
-                    //Exit the OpMode
                     state = State.SHOOT;
-
                     break;
-                case PUSH_BLUE_BUTTON_LEFT:
-                    beaconColorRight = beacon.getRightColor(colorLedEnable);
+                case MOVE_BALL:
+                    heading = 90; // from 270
+                    power = 1;
+                    timeOut = .8;
+                    drive.translateTime(timeOut, power, heading);
 
-                    button = beacon.getButtonPush(alliance, beaconColorRight);
-
-                    beacon.pushButton(button);
-
-                    sleep(250);
-
-                    beaconState = beacon.checkBeacon(colorLedEnable, alliance);
-
-                    while (!beaconState) {
-                        mm = 5;
-                        heading = 0;
-                        drive.translateDistance(mm, power, heading);
-                        beaconState = beacon.checkBeacon(colorLedEnable, alliance);
-                    }
-
-                    beacon.resetButton();
-
-                    //Exit the OpMode
-                    state = State.CAP_BALL;
-
-                    break;
-                case ACQUIRE_BLUE_BEACON_LEFT:
+                    opMode.sleep(8000);
 
                     heading = 180;
-                    power = 1;
-                    timeOut = .5;
-
-                    drive.translateTime(timeOut, power, heading);
-
-                    heading = 270;
                     power = 1;
                     timeOut = 2;
-
-                    drive.translateTime(timeOut, power, heading);
-
-                    power = .2;
-                    heading = 270;
-                    drive.translateOdsStop(odsThreshold, power, heading);
-
-                    y = 1475;
-                    heading = 0;
-                    power = .2;
-                    drive.acquireBeaconY(y, power, heading);
-
-                    sleep(250);
-
-                    state = State.PUSH_BLUE_BUTTON_LEFT;
-                    break;
-                case CAP_BALL:
-                    heading = 180;
-                    power = 1;
-                    timeOut = 1;
-                    drive.translateTime(timeOut, power, heading);
-
-                    heading = 32;
-                    drive.pivotLeft(power, heading);
-
-                    heading = 180;
-                    power = 1;
-                    timeOut = 2.2;
-                    drive.translateTime(timeOut, power, heading);
-
-                    heading = 270;
-                    power = 1;
-                    timeOut = 1;
                     drive.translateTime(timeOut, power, heading);
 
                     state = State.HALT;
+                    break;
 
-                    break;
-                case END_GAME:
-                    break;
+
                 case HALT:
                     drive.motorsHalt();               //Stop the motors
 
@@ -443,9 +344,8 @@ public class BlueShootCapBall extends LinearOpMode {
      * Enumerate the States of the machine.
      */
     enum State {
-        PUSH_RED_BUTTON_LEFT, PUSH_RED_BUTTON_RIGHT, TEST, HALT, SHOOT, END_GAME, CAP_BALL,
-        ACQUIRE_BLUE_BEACON_RIGHT, PUSH_BLUE_BUTTON_RIGHT, PUSH_BLUE_BUTTON_LEFT,
-        ACQUIRE_BLUE_BEACON_LEFT
+        ACQUIRE_RED_BEACON_LEFT, ACQUIRE_RED_BEACON_RIGHT, PUSH_RED_BUTTON_LEFT, PUSH_RED_BUTTON_RIGHT,
+        TEST, HALT, SHOOT, END_GAME, CAP_BALL, MOVE_TO_SHOOT_POSITION, MOVE_BALL
     }
 
 }

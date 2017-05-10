@@ -64,7 +64,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         - HALT                          // Shutdown sequence for autonomous mode
 
  */
-package org.firstinspires.ftc.teamcode.Opmodes11572;
+package org.firstinspires.ftc.teamcode.VelocityVortex;
 
 /**
  * Import the classes we need to have local access to.
@@ -88,9 +88,9 @@ import java.util.List;
 /**
  * Name the opMode and put it in the appropriate group
  */
-@Autonomous(name = "Blue Shoot Corner", group = "COMP")
+@Autonomous(name = "Red Shoot Corner", group = "COMP")
 
-public class BlueShootCorner extends LinearOpMode {
+public class RedShootCorner extends LinearOpMode {
 
     /**
      * Instantiate all objects needed in this class
@@ -142,10 +142,10 @@ public class BlueShootCorner extends LinearOpMode {
     private String beaconColorRight;                //Color of the right side of the beacon
     private String beaconColorLeft;                 //Color of the left side of the beacon
     private String button;                          //Which button to push
-    private String alliance = "blue";                //Your current alliance
+    private String alliance = "red";                //Your current alliance
     private boolean beaconState = false;            //Has the beacon been triggered?
     private String courseCorrect = "";
-    private State state = State.ACQUIRE_BLUE_BEACON_RIGHT;    //Machine State
+    private State state = State.ACQUIRE_RED_BEACON_LEFT;    //Machine State
     private String nextState = "Beacon2";
     private int target;
 
@@ -218,37 +218,37 @@ public class BlueShootCorner extends LinearOpMode {
                     shooter.feedStop();
                     sleep(1250);
                     shooter.shoot();
-                    state = State.ACQUIRE_BLUE_BEACON_LEFT;
+                    state = State.ACQUIRE_RED_BEACON_RIGHT;
                     break;
-                case ACQUIRE_BLUE_BEACON_RIGHT:
-                    heading = 310;
+                case ACQUIRE_RED_BEACON_LEFT:
+                    heading = 50;
                     power = 1;
-                    timeOut = 2.6;
+                    timeOut = 2.4;
                     drive.translateTime(timeOut, power, heading);
 
-                    heading = 270;
+                    heading = 90;
                     power = 1;
-                    timeOut = .6;
+                    timeOut = .4;
 
                     drive.translateTime(timeOut, power, heading);
 
-                    heading = 270;
+                    heading = 90;
                     power = .2;
                     drive.translateOdsStop(odsThreshold, power, heading);
 
                     power = .2;
-                    y = 1475;
+                    x = -1460;
                     heading = 0;
-                    drive.acquireBeaconY(y, power, heading);
+                    drive.acquireBeaconX(x, power, heading);
 
                     robotX = 0;
                     sleep(250);
 
                     //Exit the OpMode
-                    state = State.PUSH_BLUE_BUTTON_RIGHT;
+                    state = State.PUSH_RED_BUTTON_LEFT;
                     break;
 
-                case PUSH_BLUE_BUTTON_RIGHT:
+                case PUSH_RED_BUTTON_LEFT:
                     beaconColorRight = beacon.getRightColor(colorLedEnable);
 
                     button = beacon.getButtonPush(alliance, beaconColorRight);
@@ -272,7 +272,7 @@ public class BlueShootCorner extends LinearOpMode {
                     state = State.SHOOT;
 
                     break;
-                case PUSH_BLUE_BUTTON_LEFT:
+                case PUSH_RED_BUTTON_RIGHT:
                     beaconColorRight = beacon.getRightColor(colorLedEnable);
 
                     button = beacon.getButtonPush(alliance, beaconColorRight);
@@ -293,10 +293,10 @@ public class BlueShootCorner extends LinearOpMode {
                     beacon.resetButton();
 
                     //Exit the OpMode
-                    state = State.CAP_BALL;
+                    state = State.END_GAME;
 
                     break;
-                case ACQUIRE_BLUE_BEACON_LEFT:
+                case ACQUIRE_RED_BEACON_RIGHT:
 
                     heading = 180;
                     power = 1;
@@ -304,45 +304,48 @@ public class BlueShootCorner extends LinearOpMode {
 
                     drive.translateTime(timeOut, power, heading);
 
-                    heading = 270;
+                    heading = 90;
                     power = 1;
                     timeOut = 2;
 
                     drive.translateTime(timeOut, power, heading);
 
                     power = .2;
-                    heading = 270;
+                    heading = 90;
                     drive.translateOdsStop(odsThreshold, power, heading);
 
-                    y = 1475;
+                    x = -1460;
                     heading = 0;
                     power = .2;
-                    drive.acquireBeaconY(y, power, heading);
+                    drive.acquireBeaconX(x, power, heading);
 
                     sleep(250);
 
-                    state = State.PUSH_BLUE_BUTTON_LEFT;
+
+                    state = State.PUSH_RED_BUTTON_RIGHT;
                     break;
                 case END_GAME:
+                    //Lift the ODS sensor away from the mat
+
+                    robot.servoODS.setPosition(.5);
+
                     heading = 180;
                     power = 1;
                     timeOut = 1;
                     drive.translateTime(timeOut, power, heading);
 
-                    heading = 90;
-                    power = 1;
-                    timeOut = 3.25;
+                    heading = 270;
+                    timeOut = 3;
                     drive.translateTime(timeOut, power, heading);
 
-                    heading = -25;
+                    heading = 25;
                     power = .8;
                     drive.pivotLeft(power, heading);
 
-                    heading = 0;
-                    power = .8;
                     timeOut = 1.5;
+                    heading = 0;
+                    power = 1;
                     drive.translateTime(timeOut, power, heading);
-
                     state = State.HALT;
                     break;
                 case HALT:
@@ -441,9 +444,8 @@ public class BlueShootCorner extends LinearOpMode {
      * Enumerate the States of the machine.
      */
     enum State {
-        PUSH_RED_BUTTON_LEFT, PUSH_RED_BUTTON_RIGHT, TEST, HALT, SHOOT, END_GAME, CAP_BALL,
-        ACQUIRE_BLUE_BEACON_RIGHT, PUSH_BLUE_BUTTON_RIGHT, PUSH_BLUE_BUTTON_LEFT,
-        ACQUIRE_BLUE_BEACON_LEFT
+        ACQUIRE_RED_BEACON_LEFT, ACQUIRE_RED_BEACON_RIGHT, PUSH_RED_BUTTON_LEFT, PUSH_RED_BUTTON_RIGHT,
+        TEST, HALT, SHOOT, END_GAME, CAP_BALL
     }
 
 }

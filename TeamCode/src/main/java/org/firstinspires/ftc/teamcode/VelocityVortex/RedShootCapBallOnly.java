@@ -64,7 +64,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         - HALT                          // Shutdown sequence for autonomous mode
 
  */
-package org.firstinspires.ftc.teamcode.Opmodes11572;
+package org.firstinspires.ftc.teamcode.VelocityVortex;
 
 /**
  * Import the classes we need to have local access to.
@@ -88,9 +88,9 @@ import java.util.List;
 /**
  * Name the opMode and put it in the appropriate group
  */
-@Autonomous(name = "Blue Shoot Cap Ball Only", group = "COMP")
+@Autonomous(name = "Red Shoot Cap Ball Only", group = "COMP")
 
-public class BlueShootCapBallOnly extends LinearOpMode {
+public class RedShootCapBallOnly extends LinearOpMode {
 
     /**
      * Instantiate all objects needed in this class
@@ -142,7 +142,7 @@ public class BlueShootCapBallOnly extends LinearOpMode {
     private String beaconColorRight;                //Color of the right side of the beacon
     private String beaconColorLeft;                 //Color of the left side of the beacon
     private String button;                          //Which button to push
-    private String alliance = "blue";                //Your current alliance
+    private String alliance = "red";                //Your current alliance
     private boolean beaconState = false;            //Has the beacon been triggered?
     private String courseCorrect = "";
     private State state = State.MOVE_TO_SHOOT_POSITION;    //Machine State
@@ -223,7 +223,7 @@ public class BlueShootCapBallOnly extends LinearOpMode {
                 case MOVE_TO_SHOOT_POSITION:
                     opMode.sleep(10000);
 
-                    heading = 270; // from 90
+                    heading = 90;
                     power = 1;
                     timeOut = 1.5;
                     drive.translateTime(timeOut, power, heading);
@@ -231,8 +231,8 @@ public class BlueShootCapBallOnly extends LinearOpMode {
                     state = State.SHOOT;
                     break;
                 case MOVE_BALL:
-                    heading = 90; // from 270
-                    power = 1;
+                    heading = 270;
+                    power = .5;
                     timeOut = .8;
                     drive.translateTime(timeOut, power, heading);
 
@@ -240,7 +240,7 @@ public class BlueShootCapBallOnly extends LinearOpMode {
 
                     heading = 180;
                     power = 1;
-                    timeOut = 2;
+                    timeOut = 2.5;
                     drive.translateTime(timeOut, power, heading);
 
                     state = State.HALT;
