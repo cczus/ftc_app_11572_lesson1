@@ -23,7 +23,6 @@ public class DriveMecanum {
     public String procedure;
     public double initZ;
     public double currentZint;
-    public double odsThreshold = .2;   //Threshold at which the ODS sensor acquires the whie line
     public double ods = 0;             //Value returned from the Optical Distance Sensor
     public double zCorrection = 0;
     private List<VuforiaTrackable> myTrackables;
@@ -33,8 +32,6 @@ public class DriveMecanum {
     private VuforiaLib myVuforia = null;
     private List<Double> vuforiaTracking;
     private DataLogger Dl;
-    private double heading;
-    private double power;
     private double colorRightRed = 0;   //Value from color sensor
     private double colorRightBlue = 0;  //Value from color sensor
     private double colorLeftRed = 0;    //Value from color sensor
@@ -448,133 +445,6 @@ public class DriveMecanum {
     }
 
     /**
-     * Translate on a heading and stop when we reach the specified X axis value.
-     */
-    private void translateVuforiaNavXNeg(double x, double power, double heading) {
-        procedure = "translateVuforiaNavXNeg";
-        initZ = robot.mrGyro.getIntegratedZValue();
-        radians = getRadians(heading);
-
-        getVuforiaLocation();
-
-        while (opMode.opModeIsActive() && robotX > x) {
-            LF = calcLF(radians, power);
-            RF = calcRF(radians, power);
-            LR = calcLR(radians, power);
-            RR = calcRR(radians, power);
-
-            currentZint = robot.mrGyro.getIntegratedZValue();
-
-            if (currentZint != initZ) {  //Robot has drifted off course
-                zCorrection = Math.abs(initZ - currentZint);
-
-                courseCorrect();
-            } else {
-                zCorrection = 0;
-            }
-
-            setPower(LF, LR, RF, RR);
-
-            getVuforiaLocation();
-
-            if (tel) {
-                telemetry();
-                logData();
-            }
-
-            opMode.idle();
-        }
-
-        motorsHalt();
-
-    }
-
-
-    /**
-     * Translate on a heading and stop when we reach the specified X axis value.
-     */
-    private void translateVuforiaNavXPos(double x, double power, double heading) {
-        procedure = "translateVuforiaNavXNeg";
-        initZ = robot.mrGyro.getIntegratedZValue();
-        radians = getRadians(heading);
-
-        getVuforiaLocation();
-
-        while (opMode.opModeIsActive() && robotX < x) {
-            LF = calcLF(radians, power);
-            RF = calcRF(radians, power);
-            LR = calcLR(radians, power);
-            RR = calcRR(radians, power);
-
-            currentZint = robot.mrGyro.getIntegratedZValue();
-
-            if (currentZint != initZ) {  //Robot has drifted off course
-                zCorrection = Math.abs(initZ - currentZint);
-
-                courseCorrect();
-            } else {
-                zCorrection = 0;
-            }
-
-            setPower(LF, LR, RF, RR);
-
-            getVuforiaLocation();
-
-            if (tel) {
-                telemetry();
-                logData();
-            }
-
-            opMode.idle();
-        }
-
-        motorsHalt();
-
-    }
-
-    /**
-     * Translate on a heading and stop when we reach the specified Y axis value.
-     */
-    private void translateVuforiaNavY(double y, double power, double heading) {
-        procedure = "translateVuforiaNavY";
-        initZ = robot.mrGyro.getIntegratedZValue();
-        radians = getRadians(heading);
-
-        getVuforiaLocation();
-
-        while (opMode.opModeIsActive() && robotY < y) {
-            LF = calcLF(radians, power);
-            RF = calcRF(radians, power);
-            LR = calcLR(radians, power);
-            RR = calcRR(radians, power);
-
-            currentZint = robot.mrGyro.getIntegratedZValue();
-
-            if (currentZint != initZ) {  //Robot has drifted off course
-                zCorrection = Math.abs(initZ - currentZint);
-
-                courseCorrect();
-            } else {
-                zCorrection = 0;
-            }
-
-            setPower(LF, LR, RF, RR);
-
-            getVuforiaLocation();
-
-            if (tel) {
-                telemetry();
-                logData();
-            }
-
-            opMode.idle();
-        }
-
-        motorsHalt();
-
-    }
-
-    /**
      * Calculate the wheel speeds.
      *
      * @return wheel speed
@@ -658,7 +528,6 @@ public class DriveMecanum {
     private void telemetry() {
 
         opMode.telemetry.addData("Procedure", String.valueOf(procedure));
-        opMode.telemetry.addData("Heading", String.valueOf(heading));
         opMode.telemetry.addData("robotX", String.valueOf((int) robotX));
         opMode.telemetry.addData("robotY", String.valueOf((int) robotY));
         opMode.telemetry.addData("robotBearing", String.valueOf((int) robotBearing));
@@ -685,7 +554,6 @@ public class DriveMecanum {
         Dl.addField(String.valueOf(""));
         Dl.addField(String.valueOf(procedure));
         Dl.addField(String.valueOf(""));
-        Dl.addField(String.valueOf(heading));
         Dl.addField(String.valueOf((int) robotX));
         Dl.addField(String.valueOf((int) robotY));
         Dl.addField(String.valueOf(""));
