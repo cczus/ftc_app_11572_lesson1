@@ -71,9 +71,7 @@ package org.firstinspires.ftc.teamcode.Opmodes;
  */
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
@@ -91,7 +89,7 @@ import java.util.List;
  */
 @Autonomous(name = "Mecanum Template", group = "COMP")
 
-public class MecanumTemplate extends LinearOpMode {
+public class proportionalLineFollower extends LinearOpMode {
 
     /**
      * Instantiate all objects needed in this class
@@ -190,14 +188,36 @@ public class MecanumTemplate extends LinearOpMode {
             // FOO
             switch (state) {
                 case DRIVE:
-                    /**
-                    *Calls the drive.translateDistance method you must pass in the following variables
-                     * mm as int
-                     * power as double 0 to 1
-                     * heading as int 0 to 359
-                    **/
-                    drive.translateDistance(100, 1, 0);
+                    double duration = 15;
+                    double startTime = runtime.seconds();
+                    double odsValue;
 
+                    odsValue = robot.ods.getLightDetected();
+
+                    while ((runtime.seconds() - startTime) < duration)
+                    {
+                        if (odsValue == .5)
+                        {
+                            robot.motorLF.setPower(.5);
+                            robot.motorRF.setPower(.5);
+                            robot.motorLR.setPower(.5);
+                            robot.motorRR.setPower(.5);
+                        }
+                        if (odsValue < .5)
+                        {
+                            robot.motorLF.setPower(.5);
+                            robot.motorRF.setPower(.5);
+                            robot.motorLR.setPower(.6);
+                            robot.motorRR.setPower(.6);
+                        }
+                        if (odsValue > .5)
+                        {
+                            robot.motorLF.setPower(.6);
+                            robot.motorRF.setPower(.6);
+                            robot.motorLR.setPower(.5);
+                            robot.motorRR.setPower(.5);
+                        }
+                    }
                     /**
                      * Pause for 5000 milliseconds
                      */

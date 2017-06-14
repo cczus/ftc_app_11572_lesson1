@@ -71,11 +71,11 @@ package org.firstinspires.ftc.teamcode.Opmodes;
  */
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.vuforia.Vuforia;
 
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.teamcode.HardwareProfiles.HardwareTestPlatform;
 import org.firstinspires.ftc.teamcode.Libs.Beacon;
@@ -89,74 +89,28 @@ import java.util.List;
 /**
  * Name the opMode and put it in the appropriate group
  */
-@Autonomous(name = "Mecanum Template", group = "COMP")
+@Autonomous(name = "Vuforia Open CV Template", group = "COMP")
 
-public class MecanumTemplate extends LinearOpMode {
+public class VuforiaOpenCVTemplate extends LinearOpMode {
 
     /**
      * Instantiate all objects needed in this class
      */
 
-    private final static HardwareTestPlatform robot = new HardwareTestPlatform();
-    double radians = 0;
     private VuforiaLib myVuforia = new VuforiaLib();
+    private Vuforia vuforia = new Vuforia();
     private ElapsedTime runtime = new ElapsedTime();
     private LinearOpMode opMode = this;
-    Beacon beacon = new Beacon(robot, opMode);
-    Shooter shooter = new Shooter(robot, opMode);
 
     /**
      * Define global variables
      */
-    private double mm = 500;            //Distance for translateDistance method
-    private double power = .6;          //Motor power for all methods
-    private double heading = 90;        //Heading for all methods
-    private double y = -200;            //Vuforia y stop coordinate
-    private double x = -200;            //Vuforia x stop coordinate
-    private double changeSpeed = 0;     //Rotation speed for motor speed calculations
-    private double initZ;               //The initial reading from integrated Z
-    private double currentZint;         //Current integrated Z value
-    private double zCorrection;         //Course correction in degrees
-    private double timeOut = 5;         //Timeout in seconds for translateTime method
-    private double timeOutTime;         //Calculated time to stop
-    private String procedure;           //Name of the method that is running
-    private double odsThreshold = .3;   //Threshold at which the ODS sensor acquires the whie line
-    private double ods = 0;             //Value returned from the Optical Distance Sensor
-    private double colorRightRed = 0;   //Value from color sensor
-    private double colorRightBlue = 0;  //Value from color sensor
-    private double colorLeftRed = 0;    //Value from color sensor
-    private double colorLeftBlue = 0;   //Value from color sensor
-    private double robotX;              // The robot's X position from VuforiaLib
-    private double robotY;              // The robot's Y position from VuforiaLib
-    private double robotBearing;        //Bearing to, i.e. the bearing you need to steer toward
-    private double LF, RF, LR, RR;      //Motor power setting
-    private double myCurrentMotorPosition;  //Current encoder position
-    private double myTargetPosition;        //Target encoder position
-    private boolean colorLedEnable = false; //Enable if in testing mode, disable for beacon
-    private boolean leftAlign = false;      //
-    private boolean beaconFlag = false;
     private List<Double> vuforiaTracking;   //List of Vuforia coordinates
     private List<VuforiaTrackable> myTrackables;    //List of Vuforia trackable objects
     private DataLogger Dl;                          //Datalogger object
-    private double motorCorrectCoefficient = .05;    //Amount to divide the zInt drift by
-    private double motorCorrectCoefficient2 = .025;    //Amount to divide the zInt drift by
-    private String beaconColorRight;                //Color of the right side of the beacon
-    private String beaconColorLeft;                 //Color of the left side of the beacon
-    private String button;                          //Which button to push
-    private String alliance = "blue";                //Your current alliance
-    private boolean beaconState = false;            //Has the beacon been triggered?
-    private String courseCorrect = "";
     private State state = State.HALT;    //Machine State
-    private String nextState = "Beacon2";
-    private int target;
-
 
     public void runOpMode() {
-        /**
-         * Setup the init state of the robot.  This configures all the hardware that is defined in
-         * the HardwareTestPlatform class.
-         */
-        robot.init(hardwareMap);
         createDl();
 
         /**
@@ -166,8 +120,6 @@ public class MecanumTemplate extends LinearOpMode {
         telemetry.update();
 
         myTrackables = myVuforia.vuforiaInit();
-
-        DriveMecanum drive = new DriveMecanum(robot, opMode, myVuforia, myTrackables, Dl);
 
         telemetry.addData("Status", "Initialized");
         telemetry.update();
@@ -189,9 +141,10 @@ public class MecanumTemplate extends LinearOpMode {
              */
             // FOO
             switch (state) {
+                case OPENCV:
 
+                    break;
                 case HALT:
-                    drive.motorsHalt();               //Stop the motors
 
                     //Stop the DataLogger
                     dlStop();
@@ -212,31 +165,6 @@ public class MecanumTemplate extends LinearOpMode {
 
         Dl = new DataLogger("AutoMecanumSimpleTest" + runtime.time());
         Dl.addField("runTime");
-        Dl.addField("Alliance");
-        Dl.addField("State");
-        Dl.addField("Procedure");
-        Dl.addField("courseCorrect");
-        Dl.addField("heading");
-        Dl.addField("robotX");
-        Dl.addField("robotY");
-        Dl.addField("X");
-        Dl.addField("Y");
-        Dl.addField("robotBearing");
-        Dl.addField("initZ");
-        Dl.addField("currentZ");
-        Dl.addField("zCorrection");
-        Dl.addField("touchSensor");
-        Dl.addField("ODS");
-        Dl.addField("colorRightRed");
-        Dl.addField("colorRightBlue");
-        Dl.addField("colorLeftRed");
-        Dl.addField("colorLeftBlue");
-        Dl.addField("LFTargetPos");
-        Dl.addField("LFMotorPos");
-        Dl.addField("LF");
-        Dl.addField("RF");
-        Dl.addField("LR");
-        Dl.addField("RR");
         Dl.newLine();
     }
 
@@ -246,31 +174,6 @@ public class MecanumTemplate extends LinearOpMode {
     private void logData() {
 
         Dl.addField(String.valueOf(runtime.time()));
-        Dl.addField(String.valueOf(alliance));
-        Dl.addField(String.valueOf(state));
-        Dl.addField(String.valueOf(procedure));
-        Dl.addField(String.valueOf(courseCorrect));
-        Dl.addField(String.valueOf(heading));
-        Dl.addField(String.valueOf((int) robotX));
-        Dl.addField(String.valueOf((int) robotY));
-        Dl.addField(String.valueOf(x));
-        Dl.addField(String.valueOf(y));
-        Dl.addField(String.valueOf((int) robotBearing));
-        Dl.addField(String.valueOf(initZ));
-        Dl.addField(String.valueOf(currentZint));
-        Dl.addField(String.valueOf(zCorrection));
-        Dl.addField(String.valueOf(robot.touchSensor.getValue()));
-        Dl.addField(String.valueOf(ods));
-        Dl.addField(String.valueOf(colorRightRed));
-        Dl.addField(String.valueOf(colorRightBlue));
-        Dl.addField(String.valueOf(colorLeftRed));
-        Dl.addField(String.valueOf(colorLeftBlue));
-        Dl.addField(String.valueOf(myTargetPosition));
-        Dl.addField(String.valueOf(robot.motorLF.getCurrentPosition()));
-        Dl.addField(String.valueOf(LF));
-        Dl.addField(String.valueOf(RF));
-        Dl.addField(String.valueOf(LR));
-        Dl.addField(String.valueOf(RR));
         Dl.newLine();
     }
 
@@ -286,7 +189,7 @@ public class MecanumTemplate extends LinearOpMode {
      * Enumerate the States of the machine.
      */
     enum State {
-        HALT
+        HALT, OPENCV
     }
 
 }

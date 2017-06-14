@@ -40,8 +40,8 @@ public class HardwareTestPlatform {
     public TouchSensor touchSensor;             //Declare the Touch Sensor
     public GyroSensor sensorGyro;               //Declare the GyroNew sensor
     public ModernRoboticsI2cGyro mrGyro;        //Declare the MR GyroNew
-    public Servo servoPusher;                   //Declare the servo
-    public Servo servoODS;                      //Declare the servo
+    //public Servo servoPusher;                   //Declare the servo
+    //public Servo servoODS;                      //Declare the servo
 
     /* Constructor */
     public HardwareTestPlatform() {
@@ -77,8 +77,8 @@ public class HardwareTestPlatform {
 
             touchSensor = hwMap.touchSensor.get("ts");
 
-            servoPusher = hwMap.servo.get("pusher");
-            servoODS = hwMap.servo.get("ODSservo");
+            //servoPusher = hwMap.servo.get("pusher");
+            //servoODS = hwMap.servo.get("ODSservo");
 
             // Define and Initialize Motors
             motorLF = hwMap.dcMotor.get("lf");
@@ -132,8 +132,8 @@ public class HardwareTestPlatform {
 
             touchSensor = hwMap.touchSensor.get("ts");
 
-            servoPusher = hwMap.servo.get("pusher");
-            servoODS = hwMap.servo.get("ODSservo");
+            //servoPusher = hwMap.servo.get("pusher");
+            //servoODS = hwMap.servo.get("ODSservo");
 
             // Define and Initialize Motors
             motorLF = hwMap.dcMotor.get("lf");
@@ -173,8 +173,8 @@ public class HardwareTestPlatform {
             touchSensor = hwMap.touchSensor.get("ts");     //Map the sensor to the hardware
             sensorGyro = hwMap.gyroSensor.get("gyro");     //Point to the gyro in the configuration file
             mrGyro = (ModernRoboticsI2cGyro) sensorGyro;         //MR GyroNew
-            servoPusher = hwMap.servo.get("pusher");
-            servoODS = hwMap.servo.get("ODSservo");
+            //servoPusher = hwMap.servo.get("pusher");
+            //servoODS = hwMap.servo.get("ODSservo");
 
 
             // Define and Initialize Motors

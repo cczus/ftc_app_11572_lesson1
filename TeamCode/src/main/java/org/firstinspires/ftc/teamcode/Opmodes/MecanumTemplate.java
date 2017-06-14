@@ -189,14 +189,39 @@ public class MecanumTemplate extends LinearOpMode {
              */
             // FOO
             switch (state) {
+                case DRIVE:
+                    /**
+                    *Calls the drive.translateDistance method you must pass in the following variables
+                     * mm as int
+                     * power as double 0 to 1
+                     * heading as int 0 to 359
+                    **/
+                    drive.translateDistance(100, 1, 0);
 
+                    /**
+                     * Pause for 5000 milliseconds
+                     */
+                    sleep(5000);
+
+                    /**
+                     * Set the state to HALT
+                     */
+                    state = state.HALT;
+                    break;
                 case HALT:
+                    /**
+                     * Stop all drive motors
+                     */
                     drive.motorsHalt();               //Stop the motors
 
-                    //Stop the DataLogger
+                    /**
+                     * Stop the data logger
+                     **/
                     dlStop();
 
-                    //Exit the OpMode
+                    /**
+                     * Exit the opmode
+                     */
                     requestOpModeStop();
                     break;
             }
@@ -286,7 +311,7 @@ public class MecanumTemplate extends LinearOpMode {
      * Enumerate the States of the machine.
      */
     enum State {
-        HALT
+        HALT, DRIVE
     }
 
 }
