@@ -40,8 +40,8 @@ public class AutoSetupServo extends LinearOpMode {
     @Override
     public void runOpMode() {
         robot.init(hardwareMap);
-        robot.servoODS.setPosition(0);
-        robot.servoPusher.setPosition(.5);
+        //robot.servoODS.setPosition(0);
+        //robot.servoPusher.setPosition(.5);
         // Wait for the start button
         telemetry.addData(">", "Press Start to scan Servo.");
         telemetry.update();
@@ -49,22 +49,22 @@ public class AutoSetupServo extends LinearOpMode {
 
         // Scan servo till stop pressed.
         while (opModeIsActive()) {
-            robot.servoODS.setPosition(0);
-            robot.servoPusher.setPosition(.5);
+            //robot.servoODS.setPosition(0);
+            //robot.servoPusher.setPosition(.5);
             telemetry.addData("ODS", "0");
             telemetry.addData("Pusher", ".5");
             telemetry.update();
             sleep(1000);
-            robot.servoPusher.setPosition(.7);
+            //robot.servoPusher.setPosition(.7);
             telemetry.addData("Pusher", "1");
             telemetry.update();
             sleep(1000);
-            robot.servoPusher.setPosition(.3);
+            //robot.servoPusher.setPosition(.3);
             telemetry.addData("Pusher", "0");
             telemetry.update();
             sleep(1000);
-            robot.servoODS.setPosition(.7);
-            robot.servoPusher.setPosition(.5);
+            //robot.servoODS.setPosition(.7);
+            //robot.servoPusher.setPosition(.5);
             telemetry.addData("ODS", ".7");
             telemetry.addData("Pusher", ".5");
             telemetry.update();

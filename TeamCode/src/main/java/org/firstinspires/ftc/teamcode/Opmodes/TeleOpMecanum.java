@@ -103,11 +103,11 @@ public class TeleOpMecanum extends LinearOpMode {
             robot.motorRR.setPower(v4);
 
             if (gamepad1.left_bumper) {
-                robot.servoPusher.setPosition(1);
+                //robot.servoPusher.setPosition(1);
             }
 
             if (gamepad1.right_bumper) {
-                robot.servoPusher.setPosition(0);
+                //robot.servoPusher.setPosition(0);
             }
 
             if (gamepad1.left_trigger > 0 && gamepad1.right_trigger == 0) {

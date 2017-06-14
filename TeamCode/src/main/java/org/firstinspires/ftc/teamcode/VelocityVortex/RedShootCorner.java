@@ -163,8 +163,8 @@ public class RedShootCorner extends LinearOpMode {
         /**
          * Set the initial servo positions
          */
-        robot.servoODS.setPosition(.075);
-        robot.servoPusher.setPosition(.5);
+        //robot.servoODS.setPosition(.075);
+        //robot.servoPusher.setPosition(.5);
 
         /**
          *  Create the DataLogger object.
@@ -327,7 +327,7 @@ public class RedShootCorner extends LinearOpMode {
                 case END_GAME:
                     //Lift the ODS sensor away from the mat
 
-                    robot.servoODS.setPosition(.5);
+                    //robot.servoODS.setPosition(.5);
 
                     heading = 180;
                     power = 1;

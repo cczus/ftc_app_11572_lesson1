@@ -44,8 +44,8 @@ public class AutoSetupMotorsDrive extends LinearOpMode {
     @Override
     public void runOpMode() {
         robot.init(hardwareMap);
-        robot.servoODS.setPosition(0);
-        robot.servoPusher.setPosition(.5);
+        //robot.servoODS.setPosition(0);
+        //robot.servoPusher.setPosition(.5);
         // Wait for the start button
         telemetry.addData(">", "Press Start to test Motors.");
         telemetry.update();

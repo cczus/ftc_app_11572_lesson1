@@ -87,7 +87,7 @@ import java.util.List;
 /**
  * Name the opMode and put it in the appropriate group
  */
-@Autonomous(name = "Mecanum Template", group = "COMP")
+@Autonomous(name = "Proportional Line Follower", group = "COMP")
 
 public class proportionalLineFollower extends LinearOpMode {
 

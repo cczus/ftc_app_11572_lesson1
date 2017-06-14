@@ -77,11 +77,11 @@ public class Beacon {
 
     public void pushButton(String button) {
         if (button.equals("right")) {
-            robot.servoPusher.setPosition(0);
+            //robot.servoPusher.setPosition(0);
         }
 
         if (button.equals("left")) {
-            robot.servoPusher.setPosition(1);
+            //robot.servoPusher.setPosition(1);
         }
     }
 
@@ -121,7 +121,7 @@ public class Beacon {
     }
 
     public void resetButton() {
-        robot.servoPusher.setPosition(.5);
+        //robot.servoPusher.setPosition(.5);
     }
 
 }

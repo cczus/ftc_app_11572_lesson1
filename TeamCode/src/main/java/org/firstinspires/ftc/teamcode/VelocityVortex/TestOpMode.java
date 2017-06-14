@@ -163,8 +163,8 @@ public class TestOpMode extends LinearOpMode {
         /**
          * Set the initial servo positions
          */
-        robot.servoODS.setPosition(.075);
-        robot.servoPusher.setPosition(.5);
+        //robot.servoODS.setPosition(.075);
+        //robot.servoPusher.setPosition(.5);
 
         /**
          *  Create the DataLogger object.
