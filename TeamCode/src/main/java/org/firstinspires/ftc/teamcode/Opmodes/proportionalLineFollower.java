@@ -196,27 +196,11 @@ public class proportionalLineFollower extends LinearOpMode {
 
                     while ((runtime.seconds() - startTime) < duration)
                     {
-                        if (odsValue == .5)
-                        {
-                            robot.motorLF.setPower(.5);
-                            robot.motorRF.setPower(.5);
-                            robot.motorLR.setPower(.5);
-                            robot.motorRR.setPower(.5);
-                        }
-                        if (odsValue < .5)
-                        {
-                            robot.motorLF.setPower(.5);
-                            robot.motorRF.setPower(.5);
-                            robot.motorLR.setPower(.6);
-                            robot.motorRR.setPower(.6);
-                        }
-                        if (odsValue > .5)
-                        {
-                            robot.motorLF.setPower(.6);
-                            robot.motorRF.setPower(.6);
-                            robot.motorLR.setPower(.5);
-                            robot.motorRR.setPower(.5);
-                        }
+                        robot.motorLF.setPower(.5);
+                        robot.motorRF.setPower(.5);
+                        robot.motorLR.setPower(.5);
+                        robot.motorRR.setPower(.5);
+
                     }
                     /**
                      * Pause for 5000 milliseconds

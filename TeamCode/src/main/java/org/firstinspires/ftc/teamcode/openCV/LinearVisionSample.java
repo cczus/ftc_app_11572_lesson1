@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.openCV;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.lasarobotics.vision.android.Cameras;
 import org.lasarobotics.vision.ftc.resq.Beacon;
@@ -22,6 +23,7 @@ import org.opencv.core.Size;
  * Should this happen, open up an issue on GitHub. :)
  */
 @Autonomous(name = "SETUP - Check OpenCV", group = "SETUP")
+@Disabled
 public class LinearVisionSample extends LinearVisionOpMode {
 
     //Frame counter
